@@ -14,6 +14,12 @@ import { paramIdDto } from './dto/paramId.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
 @Injectable()
 export class UserService {
+
+  public users = [{
+    email:"shaher@gmail.com",
+    password:"hello"
+  }]
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -41,6 +47,16 @@ export class UserService {
     await user.save();
     return user;
   }
+
+  async getUser(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email},
+    });
+    
+    console.log(user)
+    return user;
+  }
+  // return this.users.find((user)=> user.email = email)
 
   async findAll() {
     const query = await this.userRepository.find({
@@ -72,17 +88,13 @@ export class UserService {
   }
 
   async delete({ id }: paramIdDto) {
-    const user = this.userRepository.findOne({
-      where: { id: id, deleted_at: IsNull() },
+    const user = await this.userRepository.findOne({
+      where: { id, deleted_at: IsNull() },
     });
 
-    console.log(user)
+    if (!user) throw new NotFoundException('user not found');
 
-    // if (!user) throw new NotFoundException('user not found');
-
-    // user.deleted_at = new Date();
-    // await user.save();
-
-    return user
+    user.deleted_at = new Date();
+    await user.save();
   }
 }
