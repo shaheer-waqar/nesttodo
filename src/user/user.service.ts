@@ -16,8 +16,8 @@ import { UserUpdateDto } from './dto/user-update.dto';
 export class UserService {
 
   public users = [{
-    email:"shaher@gmail.com",
-    password:"hello"
+    email:"shaheer",
+    password:"1234"
   }]
 
   constructor(
@@ -50,13 +50,11 @@ export class UserService {
 
   async getUser(email: string) {
     const user = await this.userRepository.findOne({
-      where: { email},
+      where: { email :email},
     });
     
-    console.log(user)
     return user;
   }
-  // return this.users.find((user)=> user.email = email)
 
   async findAll() {
     const query = await this.userRepository.find({

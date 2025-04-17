@@ -9,8 +9,4 @@ export class CreateTodoDto {
   @IsString()
   task: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @IsUUID('all')
-  user_id: string;
 }

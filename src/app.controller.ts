@@ -11,9 +11,9 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  // @UseGuards(AuthGuard('local'))
-  // @Post('login')
-  // login(@Req() req: Request) {
-  //   return "req";
-  // }
+  @UseGuards(AuthGuard('local'))
+  @Post('login')
+  login(@Req() req: Request) {
+    return req.body;
+  }
 }

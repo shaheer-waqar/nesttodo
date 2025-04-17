@@ -17,12 +17,15 @@ export class TodoService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
-  async create(createTodoDto: CreateTodoDto) {
-    const { title, task, user_id } = createTodoDto;
+  async create(createTodoDto: CreateTodoDto ,currentUser : User) {
+    const { title, task,} = createTodoDto;
 
+    console.log(currentUser.id)
     const user = await this.userRepository.findOne({
-      where: { id: user_id, deleted_at: IsNull() },
+      where: { id: currentUser.id, deleted_at: IsNull() },
     });
+
+    console.log(user?.id)
 
     if (!user) throw new NotFoundException('user not found');
     const todo = await this.todoRepository.create({
@@ -36,11 +39,11 @@ export class TodoService {
     return todo;
   }
 
-  async findAll({ userId }: UserIdDto) {
+  async findAll(currentUser: User) {
     const todo = await this.todoRepository.find({
       where: {
         user: {
-          id: userId,
+          id: currentUser.id,
           deleted_at: IsNull(),
         },
       },
@@ -51,13 +54,13 @@ export class TodoService {
     return todo;
   }
 
-  async findOne({ userId }: UserIdDto, { id }: paramIdDto) {
+  async findOne(currentUser: User, { id }: paramIdDto) {
     const todo = await this.todoRepository.findOne({
       where: {
         id,
         deleted_at: IsNull(),
         user: {
-          id: userId,
+          id: currentUser.id,
         },
       },
       relations: {
@@ -65,14 +68,14 @@ export class TodoService {
       },
     });
 
-    if (!todo) throw new NotFoundException('user not found');
+    if (!todo) throw new NotFoundException('Todo not found');
 
     return todo;
   }
 
   async update(
     updateTodoDto: UpdateTodoDto,
-    { userId }: UserIdDto,
+    currentUser: User,
     { id }: paramIdDto,
   ) {
     const todo = await this.todoRepository.findOne({
@@ -80,7 +83,7 @@ export class TodoService {
         id,
         deleted_at: IsNull(),
         user: {
-          id: userId,
+          id: currentUser.id,
         },
       },
     });
@@ -92,13 +95,13 @@ export class TodoService {
     return update;
   }
 
-  async delete({ userId }: UserIdDto, { id }: paramIdDto) {
+  async delete({ id }: paramIdDto ,currentUser:User) {
     const todo = await this.todoRepository.findOne({
       where: {
         id: id,
         deleted_at: IsNull(),
         user: {
-          id: userId,
+          id: currentUser.id,
         },
       },
     });

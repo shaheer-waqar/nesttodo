@@ -41,3 +41,4 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   deleted_at: Date;
 }
+
