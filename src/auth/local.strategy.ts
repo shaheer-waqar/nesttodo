@@ -9,16 +9,18 @@ export class PassLocalStrategy extends PassportStrategy(Strategy) {
     super({
       usernameField: 'email',
     });
+    console.log('intialize')
   }
 
   async validate(email: string, password: string) {
+    console.log('sf')
     const user = await this.userService.getUser(email);
 
     if (!user) throw new UnauthorizedException();
 
     const comparePass = await bcrypt.compare(password, user.password);
 
-    if (!comparePass) throw new UnauthorizedException('wrong password');
+     if (!comparePass) throw new UnauthorizedException('wrong password');
 
     return user;
   }

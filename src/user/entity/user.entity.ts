@@ -11,6 +11,7 @@ import {
 
 import * as bcrypt from 'bcryptjs';
 import { Todo } from 'src/todo/entity/todo.entity';
+import { LoginAttempt } from 'src/auth/entity/login-attempt.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -32,6 +33,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Todo, (todo) => todo.user)
   todos: Todo[];
 
+  @OneToMany(() => LoginAttempt, (loginAttempt) => loginAttempt.user)
+  login_attempt: LoginAttempt[];
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -41,4 +45,3 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   deleted_at: Date;
 }
-

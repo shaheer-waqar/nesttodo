@@ -8,8 +8,11 @@ import { AuthModule } from './auth/auth.module';
 import { LoggerMiddle } from './middleware/logger.middleware';
 import { AuthController } from './auth/auth.controller';
 import { RequestEntity } from './auth/entity/request.entity';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AllResponse } from './interceptors/all-response.interceptor';
+import { LoginAttempt } from './auth/entity/login-attempt.entity';
+import { User } from './user/entity/user.entity';
+import { AuthenticationGuard } from './auth/guards/authentication.guard';
 
 @Module({
   imports: [
@@ -26,7 +29,7 @@ import { AllResponse } from './interceptors/all-response.interceptor';
     UserModule,
     TodoModule,
     AuthModule,
-    TypeOrmModule.forFeature([RequestEntity]),
+    TypeOrmModule.forFeature([RequestEntity,LoginAttempt,User,]),
   ],
   controllers: [AppController],
   providers: [
@@ -35,6 +38,10 @@ import { AllResponse } from './interceptors/all-response.interceptor';
       provide: APP_INTERCEPTOR,
       useClass: AllResponse,
     },
+    // {
+    //   provide:APP_GUARD,
+    //   useClass:AuthenticationGuard
+    // }
   ],
 })
 export class AppModule implements NestModule {

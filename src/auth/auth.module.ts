@@ -8,10 +8,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RequestEntity } from './entity/request.entity';
+import { LoginAttemptService } from './login-attempt.service';
+import { LoginAttempt } from './entity/login-attempt.entity';
+import { AuthJwtGuard } from './auth.guard';
+import { User } from 'src/user/entity/user.entity';
+import { AuthenticationGuard } from './guards/authentication.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([RequestEntity]),
+    TypeOrmModule.forFeature([RequestEntity,User,LoginAttempt]),
     UserModule,
     PassportModule,
     JwtModule.register({
@@ -19,6 +24,13 @@ import { RequestEntity } from './entity/request.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [PassLocalStrategy, AuthService, JwtStrategy],
+  providers: [
+    PassLocalStrategy,
+    AuthService,
+    // JwtStrategy,
+    LoginAttemptService,
+    AuthenticationGuard,
+  ],
+  exports: [AuthenticationGuard],
 })
 export class AuthModule {}

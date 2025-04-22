@@ -17,6 +17,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { AuthJwtGuard } from 'src/auth/auth.guard';
 import { User } from 'src/user/entity/user.entity';
+import { AuthenticationGuard } from 'src/auth/guards/authentication.guard';
+// import { AuthenticationGuard } from 'src/guards/authentication.guard';
 
 @Controller('todo')
 export class TodoController {
@@ -34,15 +36,15 @@ export class TodoController {
   }
 
   @Get('get-all')
-  @UseGuards(AuthJwtGuard)
+  @UseGuards(AuthenticationGuard)
   async findAll(@CurrentUser() currentUser: User) {
     const response = await this.todoService.findAll(currentUser);
-
     return response;
   }
+  @UseGuards(AuthenticationGuard)
   @Get('get-one/:id')
-  @UseGuards(AuthJwtGuard)
   async findONe(@Param() id: paramIdDto, @CurrentUser() currentUser: User) {
+    console.log(currentUser)
     const response = await this.todoService.findOne(currentUser, id);
 
     return response;

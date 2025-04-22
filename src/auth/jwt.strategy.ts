@@ -9,9 +9,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: 'shaheerkey',
     });
+
   }
 
   async validate(payload: any) {
-    return payload.payload;
+    console.log("🚀 ~ JwtStrategy ~ validate ~ payload:", payload)
+    return payload;
   }
 }
